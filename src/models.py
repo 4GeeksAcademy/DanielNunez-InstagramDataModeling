@@ -7,26 +7,45 @@ from eralchemy2 import render_er
 
 Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = 'person'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
-    id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
+class Stories(Base):
+    __tablename__ = 'Stories'
+    id = Column(Integer, primary_key = True)
+    media = Column(String(150), nullable = False)
+    views = Column(String(150))
+    likes = Column(String(150))
+    profile_id = Column(Integer, ForeignKey('profile.id'))
 
-class Address(Base):
-    __tablename__ = 'address'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
-    id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+class Post(Base):
+    __tablename__ = 'Post'
+    id = Column(Integer, primary_key = True)
+    media = Column(String(150), nullable = False)
+    copy = Column(String(150))
+    likes = Column(Integer)
+    comments = Column(String(500))
+    profile_id = Column(Integer, ForeignKey('profile.id'))
 
-    def to_dict(self):
-        return {}
+class Profile(Base):
+    __tablename__ = 'Profile'
+    id = Column(Integer, primary_key = True)
+    profile_pic = Column(String(150))
+    bio = Column(String(150))
+    followers = Column(String(150))
+    following = Column(String(150))
+    user_id = Column(Integer, ForeignKey('user.id'))
+    stories = relationship(Stories)
+    post = relationship(Post)
+
+class User(Base):
+    __tablename__ = 'User'
+    id = Column(Integer, primary_key = True)
+    name = Column(String(150), nullable = False)
+    email = Column(String(150), nullable = False)
+    password = Column(String(150), nullable = False)
+    profile = relationship(Profile)    
+    
+    
+def to_dict(self):
+    return {}
 
 ## Draw from SQLAlchemy base
 try:
