@@ -7,45 +7,45 @@ from eralchemy2 import render_er
 
 Base = declarative_base()
 
-class Stories(Base):
-    __tablename__ = 'Stories'
-    id = Column(Integer, primary_key = True)
-    media = Column(String(150), nullable = False)
-    views = Column(String(150))
-    likes = Column(String(150))
-    profile_id = Column(Integer, ForeignKey('profile.id'))
+class User(Base):
+    __tablename__ = 'user'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), nullable=False)
+    last_name = Column(String(50), nullable=False)
+    email = Column(String, nullable=False )
+    password = Column(String(50), nullable=False)
+
+class Follower(Base):
+    __tablename__ = 'follower'
+    follower_id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.user_id'))
+    user = relationship(User)
 
 class Post(Base):
-    __tablename__ = 'Post'
-    id = Column(Integer, primary_key = True)
-    media = Column(String(150), nullable = False)
-    copy = Column(String(150))
-    likes = Column(Integer)
-    comments = Column(String(500))
-    profile_id = Column(Integer, ForeignKey('profile.id'))
+    __tablename__ = 'post'
+    id = Column(Integer, primary_key=True)
+    image_url = Column(String, nullable=False)
+    description = Column(String)
+    user_id = Column(Integer, ForeignKey('user.user_id'))
+    user = relationship(User)
 
-class Profile(Base):
-    __tablename__ = 'Profile'
-    id = Column(Integer, primary_key = True)
-    profile_pic = Column(String(150))
-    bio = Column(String(150))
-    followers = Column(String(150))
-    following = Column(String(150))
+class Comment(Base):
+    __tablename__ = 'comment'
+    comment_id = Column(Integer, primary_key=True)
+    description = Column(String)
+    user_id = Column(Integer, ForeignKey('user.user_id'))
+    user = relationship(User)
+    post_id = Column(Integer, ForeignKey('post.post_id'))
+    user = relationship(Post)
+
+class Like(Base):
+    __tablename__ = 'likes'
+    id = Column(Integer, primary_key=True)
+    post_id = Column(Integer, ForeignKey('post.id'))
     user_id = Column(Integer, ForeignKey('user.id'))
-    stories = relationship(Stories)
-    post = relationship(Post)
 
-class User(Base):
-    __tablename__ = 'User'
-    id = Column(Integer, primary_key = True)
-    name = Column(String(150), nullable = False)
-    email = Column(String(150), nullable = False)
-    password = Column(String(150), nullable = False)
-    profile = relationship(Profile)    
-    
-    
-def to_dict(self):
-    return {}
+    def to_dict(self):
+        return {}
 
 ## Draw from SQLAlchemy base
 try:
